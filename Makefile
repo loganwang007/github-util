@@ -21,3 +21,12 @@ pull:       		## # pull all the github for target organisation
 
 refresh:			## # refresh the current dircetory repos
 	find . -type d -depth 1 -exec git --git-dir={}/.git --work-tree=$(pwd)/{} pull origin main \;
+
+git-status-check:   ## # check uncommited changes
+	@if git diff --quiet HEAD --; \
+	then\
+		echo "Git status check passed. Beginning build";\
+	else\
+		echo "[ERROR] Uncommitted changes detected, build aborted";\
+		false;\
+	fi
