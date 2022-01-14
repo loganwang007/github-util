@@ -8,12 +8,16 @@ SHELL=/bin/bash
 # never skip any make targets, effectively disables "change detection"
 .PHONY: $(MAKECMDGOALS)
 
+pwd = pwd
+
 help:				## # Show this help
 	@echo "Usage:"
 	@sed -ne '/@sed/!s/:.*## / /p' $(MAKEFILE_LIST) \
 		| sed 's/^/  make /' \
 		| column -s "#" -t
 
-
 pull:       		## # pull all the github for target organisation
 	curl -s https://api.github.com/orgs/${ORGANISATION}/repos?per_page=200 | ruby -rubygems -e 'require "json"; JSON.load(STDIN.read).each { |repo| %x[git clone #{repo["ssh_url"]} ]}'
+
+refresh:			## # refresh the current dircetory repos
+	find . -type d -depth 1 -exec git --git-dir={}/.git --work-tree=$(pwd)/{} pull origin main \;
