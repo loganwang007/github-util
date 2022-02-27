@@ -16,8 +16,8 @@ help:				## # Show this help
 		| sed 's/^/  make /' \
 		| column -s "#" -t
 
-pull:       		## # pull all the github for target organisation
-	curl -s https://api.github.com/orgs/${ORGANISATION}/repos?per_page=200 | ruby -rubygems -e 'require "json"; JSON.load(STDIN.read).each { |repo| %x[git clone #{repo["ssh_url"]} ]}'
+clone:       		## # clone all the github for target organisation
+	curl "https://api.github.com/orgs/${ORGANISATION}/repos?per_page=1000" | grep -o 'git@[^"]*' | xargs -L1 git clone
 
 refresh:			## # refresh the current dircetory repos
 	find . -type d -depth 1 -exec git --git-dir={}/.git --work-tree=$(pwd)/{} pull origin main \;
