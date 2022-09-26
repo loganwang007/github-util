@@ -8,8 +8,6 @@ SHELL=/bin/bash
 # never skip any make targets, effectively disables "change detection"
 .PHONY: $(MAKECMDGOALS)
 
-pwd = pwd
-
 help:				## # Show this help
 	@echo "Usage:"
 	@sed -ne '/@sed/!s/:.*## / /p' $(MAKEFILE_LIST) \
@@ -20,7 +18,7 @@ clone:       		## # clone all the github for target organisation
 	curl "https://api.github.com/orgs/${ORGANISATION}/repos?per_page=1000" | grep -o 'git@[^"]*' | xargs -L1 git clone
 
 refresh:			## # refresh the current dircetory repos
-	find . -type d -depth 1 -exec git --git-dir={}/.git --work-tree=$(pwd)/{} pull origin main \;
+	find . -type d -depth 1 -exec git --git-dir={}/.git --work-tree=$(PWD)/{} pull \;
 
 git-status-check:   ## # check uncommited changes
 	@if git diff --quiet HEAD --; \
